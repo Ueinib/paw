@@ -1,0 +1,268 @@
+
+!<DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="first.css">-->
+    <title>Document</title>
+ <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9fafb;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 8px;
+    }
+    th {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .green { background-color: #d1fae5; } /* Good */
+    .yellow { background-color: #fef9c3; } /* Warning */
+    .red { background-color: #fecaca; } /* Excluded */
+  </style>
+
+</head>
+<body>
+  
+  <div class="container" role="main">
+    <h1>Attendance — Tutorial 1</h1>
+    <p class="lead">This HTML document contains a table representing student attendance. Each row is one student.</p>
+
+    <div class="table-wrapper" aria-hidden="false">
+      <table aria-label="Student attendance table">
+        <caption>Student attendance list — session date: 2025-10-04</caption>
+        <thead>
+          <tr>
+            <th scope="col">Student ID</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">First Name</th>
+              <th scope="col" colspan="2">Session 1</th>
+              <th scope="col" colspan="2">Session 2</th>
+              <th scope="col" colspan="2">Session 3</th>
+              <th scope="col" colspan="2">Session 4</th>
+              <th scope="col" colspan="2">Session 5</th>
+              <th scope="col" colspan="2">Session 6</th>
+              <th scope="col" rowspan="2">Message</th>
+          </tr>
+          <tr>
+            <!-- second header row for the two subcolumns under "Session date" -->
+            <th></th>
+            <th></th>
+            <th></th>
+              <th scope="col" class="center">S1</th>
+              <th scope="col" class="center">P1</th>
+              <th scope="col" class="center">S2</th>
+              <th scope="col" class="center">P2</th>
+              <th scope="col" class="center">S3</th>
+              <th scope="col" class="center">P3</th>
+              <th scope="col" class="center">S4</th>
+              <th scope="col" class="center">P4</th>
+              <th scope="col" class="center">S5</th>
+              <th scope="col" class="center">P5</th>
+              <th scope="col" class="center">S6</th>
+              <th scope="col" class="center">P6</th>
+          </tr>
+        </thead>
+<tbody>
+          <!-- Example rows: replace with real data -->
+          <tr>
+            <td>20251001</td>
+            <td>ousiala</td>
+            <td>Ali </td>
+            <td class="center">
+              <!-- checkbox to indicate presence -->
+              <input type="checkbox" aria-label="Present for student 20251001" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251001">
+            </td>            <td class="center">
+              <!-- checkbox to indicate presence -->
+              <input type="checkbox" aria-label="Present for student 20251001" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251001">
+            </td>            <td class="center">
+              <!-- checkbox to indicate presence -->
+              <input type="checkbox" aria-label="Present for student 20251001" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251001">
+            </td>            <td class="center">
+              <!-- checkbox to indicate presence -->
+              <input type="checkbox" aria-label="Present for student 20251001" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251001">
+            </td>            <td class="center">
+              <!-- checkbox to indicate presence -->
+              <input type="checkbox" aria-label="Present for student 20251001" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251001">
+            </td>            <td class="center">
+              <!-- checkbox to indicate presence -->
+              <input type="checkbox" aria-label="Present for student 20251001" checked>
+            </td>
+            <td class="center">
+                </td>
+                <td></td>
+            </td>
+          </tr>
+
+          <tr>
+            <td>20251002</td>
+            <td>Haddouda</td>
+            <td>Hafs</td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251002" checked>
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251002" checked>
+            </td>
+            <td class="center">
+                </td>
+                <td></td>
+            </td>
+          </tr>
+
+          <tr>
+            <td>20251003</td>
+<td>name</td>
+            <td>ouail</td>
+            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251003">
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251003">
+            </td>            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251003">
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251003">
+            </td>            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251003">
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251003">
+            </td>            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251003">
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251003">
+            </td>            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251003">
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251003">
+            </td>            <td class="center">
+              <input type="checkbox" aria-label="Present for student 20251003">
+            </td>
+            <td class="center">
+              <input type="checkbox" aria-label="Participated for student 20251003">
+            </td>
+          </tr>
+
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Count absences (S1..S6 not checked) and participations (P1..P6 checked),
+      // color rows and populate Message column. Updates live on checkbox change.
+      function updateAttendance() {
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.forEach(row => {
+          const inputs = Array.from(row.querySelectorAll('input[type="checkbox"]'));
+          if (inputs.length === 0) return; // skip non-data rows
+
+          let absences = 0;
+          let participations = 0;
+          // inputs are ordered: S1, P1, S2, P2, ... S6, P6
+          inputs.forEach((input, idx) => {
+            if (idx % 2 === 0) {
+              if (!input.checked) absences++;
+            } else {
+              if (input.checked) participations++;
+            }
+          });
+
+          // Apply color based on absences
+          row.classList.remove('green', 'yellow', 'red');
+          if (absences < 3) row.classList.add('green');
+          else if (absences <= 4) row.classList.add('yellow');
+          else row.classList.add('red');
+
+          // Compose message
+          let message = '';
+          if (absences < 3) {
+            message = (participations >= 4)
+              ? 'Good attendance – Excellent participation'
+              : 'Good attendance – You need to participate more';
+          } else if (absences <= 4) {
+            message = (participations >= 4)
+              ? 'Warning – attendance low – Good participation'
+              : 'Warning – attendance low – You need to participate more';
+          } else {
+            message = (participations >= 4)
+              ? 'Excluded – too many absences – Good participation'
+              : 'Excluded – too many absences – You need to participate more';
+          }
+
+          const msgCell = row.querySelector('td:last-child');
+          if (msgCell) {
+            msgCell.textContent = `${message} (Absences: ${absences}, Participations: ${participations})`;
+            msgCell.setAttribute('title', `${message} — Absences: ${absences}, Participations: ${participations}`);
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        updateAttendance();
+        const checkboxes = document.querySelectorAll('table input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.addEventListener('change', updateAttendance));
+      });
+    </script>
+
+</body>
+</html>

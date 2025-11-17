@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Document</title>
+ <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9fafb;
+    }
+      /* Form styles */
+      .form-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 8px;
+      }
+    
+      .form-group {
+        margin-bottom: 1rem;
+      }
+    
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+    
+      .form-group input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+    
+      .error-message {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+    
+      .error-message.visible {
+        display: block;
+      }
+    
+      .form-group input.error {
+        border-color: #dc2626;
+      }
+    
+      button {
+        background: #3b82f6;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+    
+      button:hover {
+        background: #2563eb;
+      }
+    
+      .success-message {
+        color: #059669;
+        margin-top: 1rem;
+        display: none;
+      }
+      .report-container {
+        max-width: 800px;
+        margin: 1.5rem auto;
+        padding: 1rem;
+        background: white;
+        box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        border-radius: 8px;
+      }
+      .report-stats {
+        display: flex;
+        gap: 2rem;
+        justify-content: space-around;
+        margin-bottom: 1rem;
+      }
+      #reportCanvas { display: block; margin: 0 auto; max-width: 100%; }
+      .report-controls { text-align: center; margin: 1rem 0; }
+      /* Animation for excellent students */
+      tr.excellent-animate td {
+        animation: pulseBg 1.2s ease-in-out infinite;
+      }
+      @keyframes pulseBg {
+        0% { background-color: transparent; }
+        50% { background-color: #bbf7d0; }
+        100% { background-color: transparent; }
+      }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 8px;
+    }
+    th {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .green { background-color: #d1fae5; } /* Good */
+    .yellow { background-color: #fef9c3; } /* Warning */
+    .red { background-color: #fecaca; } /* Excluded */
+    /* Hover highlight applied via jQuery */
+    .row-highlight { outline: 3px solid rgba(37,99,235,0.45); }
+  </style>
+
+</head>
+<body>
+  <div class="form-container">
+    <h2>Add New Student</h2>
+    <form id="addStudentForm" novalidate>
+      <div class="form-group">
+        <label for="studentId">Student ID:</label>
+        <input type="text" id="studentId" name="studentId" required>
+        <div class="error-message" id="studentIdError">Student ID must contain only numbers</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <div class="error-message" id="lastNameError">Last name must contain only letters</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <div class="error-message" id="firstNameError">First name must contain only letters</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <div class="error-message" id="emailError">Please enter a valid email address</div>
+      </div>
+      
+      <button type="submit">Add Student</button>
+      <div class="success-message" id="successMessage">Student added successfully!</div>
+    </form>
+  </div>
+  <div class="search-controls" style="max-width:800px;margin:0 auto 1rem;">
+    <label for="searchName">Search by Name: </label>
+    <input type="text" id="searchName" placeholder="Type first or last name..." style="padding:0.4rem;margin-left:0.5rem;width:60%;">
+    <button id="sortAbsencesBtn" style="margin-left:1rem;">Sort by Absences (Ascending)</button>
+    <button id="sortParticipationBtn" style="margin-left:0.5rem;">Sort by Participation (Descending)</button>
+  </div>
+  <!-- Attendance table -->
+  <div class="table-wrapper" aria-hidden="false">
+    <table aria-label="Student attendance table" id="attendanceTable">
+      <caption>Student attendance list — session date: 2025-10-04</caption>
+      <thead>
+        <tr>
+          <th scope="col">Student ID</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Email</th>
+          <th scope="col" colspan="2">Session 1</th>
+          <th scope="col" colspan="2">Session 2</th>
+          <th scope="col" colspan="2">Session 3</th>
+          <th scope="col" colspan="2">Session 4</th>
+          <th scope="col" colspan="2">Session 5</th>
+          <th scope="col" colspan="2">Session 6</th>
+          <th scope="col" rowspan="2">Message</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th class="center">S1</th>
+          <th class="center">P1</th>
+          <th class="center">S2</th>
+          <th class="center">P2</th>
+          <th class="center">S3</th>
+          <th class="center">P3</th>
+          <th class="center">S4</th>
+          <th class="center">P4</th>
+          <th class="center">S5</th>
+          <th class="center">P5</th>
+          <th class="center">S6</th>
+          <th class="center">P6</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example starting rows -->
+        <tr>
+          <td>20251001</td>
+          <td>Ousiala</td>
+          <td>Ali</td>
+          <td>ali@example.com</td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251001"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251001"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251001"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251001"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251001"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251001"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251001"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251001"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251001"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251001"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251001"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251001"></td>
+          <td class="center"></td>
+        </tr>
+        <tr>
+          <td>20251002</td>
+          <td>Haddouda</td>
+          <td>Hafs</td>
+          <td>hafs@example.com</td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Participated for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Participated for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Participated for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Participated for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Participated for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Present for student 20251002"></td>
+          <td class="center"><input type="checkbox" checked aria-label="Participated for student 20251002"></td>
+          <td class="center"></td>
+        </tr>
+        <tr>
+          <td>20251003</td>
+          <td>Name</td>
+          <td>Ouail</td>
+          <td>ouail@example.com</td>
+          <td class="center"><input type="checkbox" aria-label="Present for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Present for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Present for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Present for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Present for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Present for student 20251003"></td>
+          <td class="center"><input type="checkbox" aria-label="Participated for student 20251003"></td>
+          <td class="center"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="sortModeMessage" style="text-align:center;margin-top:0.5rem;color:#374151;font-weight:600">Currently unsorted</div>
+
+  <div class="report-controls">
+    <button id="showReportBtn">Show Report</button>
+    <button id="highlightExcellentBtn">Highlight Excellent Students</button>
+    <button id="resetColorsBtn">Reset Colors</button>
+  </div>
+
+  <div id="reportSection" class="report-container" style="display:none;">
+    <div class="report-stats">
+      <div>Total students: <strong id="totalStudents">0</strong></div>
+      <div>Students marked present: <strong id="studentsPresent">0</strong></div>
+      <div>Students participated: <strong id="studentsParticipated">0</strong></div>
+    </div>
+    <canvas id="reportCanvas" width="700" height="300" aria-label="Attendance report chart"></canvas>
+  </div>
+
+  <script>
+    // attendance updater: counts absences and participations, colors rows, sets Message
+    function updateAttendance() {
+      const tbody = document.querySelector('#attendanceTable tbody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.forEach(row => {
+        const inputs = Array.from(row.querySelectorAll('input[type="checkbox"]'));
+        if (inputs.length === 0) return;
+
+        let absences = 0;
+        let participations = 0;
+        inputs.forEach((input, idx) => {
+          if (idx % 2 === 0) {
+            if (!input.checked) absences++;
+          } else {
+            if (input.checked) participations++;
+          }
+        });
+
+        row.classList.remove('green', 'yellow', 'red');
+        if (absences < 3) row.classList.add('green');
+        else if (absences <= 4) row.classList.add('yellow');
+        else row.classList.add('red');
+
+        const msgCell = row.querySelector('td:last-child');
+        let message = '';
+        if (absences < 3) {
+          message = (participations >= 4) ? 'Good attendance – Excellent participation' : 'Good attendance – You need to participate more';
+        } else if (absences <= 4) {
+          message = (participations >= 4) ? 'Warning – attendance low – Good participation' : 'Warning – attendance low – You need to participate more';
+        } else {
+          message = (participations >= 4) ? 'Excluded – too many absences – Good participation' : 'Excluded – too many absences – You need to participate more';
+        }
+        if (msgCell) {
+          msgCell.textContent = `${message} (Absences: ${absences}, Participations: ${participations})`;
+          msgCell.setAttribute('title', `${message} — Absences: ${absences}, Participations: ${participations}`);
+        }
+      });
+    }
+
+    // Small helper to escape HTML when injecting user input into the table
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    const patterns = {
+      studentId: /^\d+$/,
+      lastName: /^[A-Za-z\s-]+$/,
+      firstName: /^[A-Za-z\s-]+$/,
+      email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    };
+
+    const errorMessages = {
+      studentId: 'Student ID must contain only numbers',
+      lastName: 'Last name must contain only letters, spaces, or hyphens',
+      firstName: 'First name must contain only letters, spaces, or hyphens',
+      email: 'Please enter a valid email address'
+    };
+
+    // Validate a single field
+    function validateField(field) {
+      const value = field.value.trim();
+      const pattern = patterns[field.id];
+      const errorElement = document.getElementById(`${field.id}Error`);
+      
+      let isValid = true;
+
+      if (!value) {
+        errorElement.textContent = 'This field is required';
+        isValid = false;
+      } else if (!pattern.test(value)) {
+        errorElement.textContent = errorMessages[field.id];
+        isValid = false;
+      }
+
+      errorElement.classList.toggle('visible', !isValid);
+      field.classList.toggle('error', !isValid);
+      return isValid;
+    }
+
+    // Form submission handler: validate, check duplicate ID, append row, attach listeners
+    document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fields = ['studentId', 'lastName', 'firstName', 'email'];
+      const isValid = fields.every(fieldId => 
+        validateField(document.getElementById(fieldId))
+      );
+
+      if (!isValid) return;
+
+      const id = document.getElementById('studentId').value.trim();
+      const last = document.getElementById('lastName').value.trim();
+      const first = document.getElementById('firstName').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      const tbody = document.querySelector('#attendanceTable tbody');
+      if (!tbody) return;
+
+      // Duplicate ID check
+      const exists = Array.from(tbody.querySelectorAll('tr')).some(r => {
+        const cell = r.querySelector('td');
+        return cell && cell.textContent.trim() === id;
+      });
+      if (exists) {
+        const err = document.getElementById('studentIdError');
+        err.textContent = 'Student ID already exists';
+        err.classList.add('visible');
+        document.getElementById('studentId').classList.add('error');
+        return;
+      }
+
+      // Build row HTML
+      const tr = document.createElement('tr');
+      let html = '';
+      html += `<td>${escapeHtml(id)}</td>`;
+      html += `<td>${escapeHtml(last)}</td>`;
+      html += `<td>${escapeHtml(first)}</td>`;
+      html += `<td>${escapeHtml(email)}</td>`;
+      for (let s = 1; s <= 6; s++) {
+        html += '<td class="center">\n';
+        html += `  <input type="checkbox" aria-label="Present for student ${escapeHtml(id)}">\n`;
+        html += '</td>';
+        html += '<td class="center">\n';
+        html += `  <input type="checkbox" aria-label="Participated for student ${escapeHtml(id)}">\n`;
+        html += '</td>';
+      }
+      html += '<td class="center"></td>';
+      tr.innerHTML = html;
+      tbody.appendChild(tr);
+
+      // Attach listeners to new checkboxes and update counts
+      const newCheckboxes = tr.querySelectorAll('input[type="checkbox"]');
+      newCheckboxes.forEach(cb => cb.addEventListener('change', updateAttendance));
+      updateAttendance();
+
+      // Show confirmation and reset
+      const successMessage = document.getElementById('successMessage');
+      successMessage.textContent = 'Student added successfully!';
+      successMessage.style.display = 'block';
+      setTimeout(() => {
+        this.reset();
+        successMessage.style.display = 'none';
+        fields.forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          field.classList.remove('error');
+          document.getElementById(`${fieldId}Error`).classList.remove('visible');
+        });
+      }, 2000);
+    });
+
+    // Report helpers: compute totals and draw a simple bar chart on canvas
+    function computeReport() {
+      const tbody = document.querySelector('#attendanceTable tbody');
+      const result = { total: 0, presentStudents: 0, participatedStudents: 0 };
+      if (!tbody) return result;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      result.total = rows.length;
+      rows.forEach(row => {
+        const inputs = Array.from(row.querySelectorAll('input[type="checkbox"]'));
+        if (inputs.length === 0) return;
+        let present = false;
+        let participated = false;
+        inputs.forEach((input, idx) => {
+          if (idx % 2 === 0) {
+            if (input.checked) present = true;
+          } else {
+            if (input.checked) participated = true;
+          }
+        });
+        if (present) result.presentStudents++;
+        if (participated) result.participatedStudents++;
+      });
+      // Update DOM stat elements
+      const totalEl = document.getElementById('totalStudents');
+      const presentEl = document.getElementById('studentsPresent');
+      const partEl = document.getElementById('studentsParticipated');
+      if (totalEl) totalEl.textContent = result.total;
+      if (presentEl) presentEl.textContent = result.presentStudents;
+      if (partEl) partEl.textContent = result.participatedStudents;
+      return result;
+    }
+
+    function drawChart(values) {
+      const labels = ['Total', 'Present', 'Participated'];
+      const canvas = document.getElementById('reportCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      // Simple styling
+      const padding = 40;
+      const chartWidth = w - padding * 2;
+      const chartHeight = h - padding * 2;
+      const maxVal = Math.max(...values, 1);
+      const barWidth = chartWidth / values.length * 0.6;
+      const gap = (chartWidth / values.length) - barWidth;
+      // Draw baseline
+      ctx.fillStyle = '#111827';
+      ctx.font = '14px Arial';
+      // Bars
+      values.forEach((val, i) => {
+        const x = padding + i * (barWidth + gap) + gap / 2;
+        const barH = (val / maxVal) * chartHeight;
+        const y = padding + (chartHeight - barH);
+        // color per bar
+        const colors = ['#60a5fa', '#34d399', '#f59e0b'];
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fillRect(x, y, barWidth, barH);
+        // value label above
+        ctx.fillStyle = '#111827';
+        ctx.textAlign = 'center';
+        ctx.fillText(String(val), x + barWidth / 2, y - 6);
+        // axis label
+        ctx.fillText(labels[i], x + barWidth / 2, padding + chartHeight + 18);
+      });
+      // small caption
+      ctx.fillStyle = '#374151';
+      ctx.textAlign = 'left';
+      ctx.fillText('Attendance report (per student)', padding, 18);
+    }
+
+    // Update chart automatically when attendance changes and report is visible
+    const originalUpdateAttendance = updateAttendance;
+    updateAttendance = function() {
+      originalUpdateAttendance();
+      const reportSection = document.getElementById('reportSection');
+      if (reportSection && reportSection.style.display !== 'none') {
+        const r = computeReport();
+        drawChart([r.total, r.presentStudents, r.participatedStudents]);
+      }
+    };
+
+    // Show report button handler
+    const showBtn = document.getElementById('showReportBtn');
+    if (showBtn) {
+      showBtn.addEventListener('click', () => {
+        const section = document.getElementById('reportSection');
+        if (!section) return;
+        if (section.style.display === 'none') {
+          section.style.display = 'block';
+          showBtn.textContent = 'Hide Report';
+          const r = computeReport();
+          drawChart([r.total, r.presentStudents, r.participatedStudents]);
+        } else {
+          section.style.display = 'none';
+          showBtn.textContent = 'Show Report';
+        }
+      });
+    }
+
+    document.querySelectorAll('#addStudentForm input').forEach(input => {
+      input.addEventListener('input', () => validateField(input));
+      input.addEventListener('blur', () => validateField(input));
+    });
+  </script>
+
+  <!-- jQuery (for tutorial requirement) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    // Use jQuery to highlight rows on hover and show a message on click
+    (function($){
+      $(function(){
+        // Hover highlight: add class on mouseenter, remove on mouseleave (delegated)
+        $(document).on('mouseenter', '#attendanceTable tbody tr', function(){
+          $(this).addClass('row-highlight');
+        });
+        $(document).on('mouseleave', '#attendanceTable tbody tr', function(){
+          $(this).removeClass('row-highlight');
+        });
+
+        // Click: show student's full name and number of absences
+        $(document).on('click', '#attendanceTable tbody tr', function(e){
+          // If the click target is a checkbox (or inside), don't show the popup
+          if ($(e.target).is('input') || $(e.target).closest('input').length) return;
+
+          const $cells = $(this).find('td');
+          const studentId = $cells.eq(0).text().trim();
+          const lastName = $cells.eq(1).text().trim();
+          const firstName = $cells.eq(2).text().trim();
+
+          // Count absences: attendance checkboxes are every even-indexed input (S1,P1,S2,P2...)
+          let absences = 0;
+          const inputs = $(this).find('input[type="checkbox"]');
+          inputs.each(function(idx){
+            if (idx % 2 === 0) { // attendance checkbox
+              if (!this.checked) absences++;
+            }
+          });
+
+          const fullName = `${firstName} ${lastName}`.trim();
+          alert(`${fullName} (ID: ${studentId})\nAbsences: ${absences}`);
+        });
+
+        // Highlight excellent students (fewer than 3 absences)
+        $(document).on('click', '#highlightExcellentBtn', function(){
+          $('#attendanceTable tbody tr').each(function(){
+            let absences = 0;
+            $(this).find('input[type="checkbox"]').each(function(idx){
+              if (idx % 2 === 0 && !this.checked) absences++;
+            });
+            if (absences < 3) {
+              $(this).addClass('excellent-animate');
+            }
+          });
+        });
+
+        // Reset colors / remove highlight animation
+        $(document).on('click', '#resetColorsBtn', function(){
+          $('#attendanceTable tbody tr').removeClass('excellent-animate');
+        });
+
+        // Search by name (Last or First) using .filter()
+        $(document).on('input', '#searchName', function(){
+          const term = $(this).val().trim().toLowerCase();
+          const $rows = $('#attendanceTable tbody tr');
+          if (!term) {
+            $rows.show();
+            return;
+          }
+          // Show only rows where first or last name contains the term
+          $rows.each(function(){ $(this).show(); });
+          const matches = $rows.filter(function(){
+            const last = $(this).find('td').eq(1).text().toLowerCase();
+            const first = $(this).find('td').eq(2).text().toLowerCase();
+            return last.indexOf(term) !== -1 || first.indexOf(term) !== -1;
+          });
+          $rows.not(matches).hide();
+          matches.show();
+        });
+
+        // Sorting helpers
+        function rowAbsences($tr) {
+          let abs = 0;
+          $tr.find('input[type="checkbox"]').each(function(idx){
+            if (idx % 2 === 0 && !this.checked) abs++;
+          });
+          return abs;
+        }
+        function rowParticipations($tr) {
+          let parts = 0;
+          $tr.find('input[type="checkbox"]').each(function(idx){
+            if (idx % 2 === 1 && this.checked) parts++;
+          });
+          return parts;
+        }
+
+        // Sort by absences ascending
+        $(document).on('click', '#sortAbsencesBtn', function(){
+          const $tbody = $('#attendanceTable tbody');
+          const rows = $tbody.find('tr').get();
+          rows.sort(function(a,b){
+            return rowAbsences($(a)) - rowAbsences($(b));
+          });
+          $.each(rows, function(i, row){ $tbody.append(row); });
+          updateAttendance();
+          $('#sortModeMessage').text('Currently sorted by absences (ascending)');
+        });
+
+        // Sort by participation descending
+        $(document).on('click', '#sortParticipationBtn', function(){
+          const $tbody = $('#attendanceTable tbody');
+          const rows = $tbody.find('tr').get();
+          rows.sort(function(a,b){
+            return rowParticipations($(b)) - rowParticipations($(a));
+          });
+          $.each(rows, function(i, row){ $tbody.append(row); });
+          updateAttendance();
+          $('#sortModeMessage').text('Currently sorted by participation (descending)');
+        });
+      });
+    })(jQuery);
+  </script>
+
+  </body>
+</html>
