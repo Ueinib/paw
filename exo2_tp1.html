@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        :root{--accent:#007acc;--error:#c00}
+        body{font-family:Arial,Helvetica,sans-serif}
+        main{max-width:600px;margin:40px auto;padding:0 12px}
+        form input{width:100%;padding:8px;box-sizing:border-box;border:1px solid #ccc;border-radius:4px}
+        form label{font-weight:600}
+        .field{margin-bottom:12px}
+        .error{color:var(--error);font-size:0.9em;display:none}
+
+        /* Show error only after user types (placeholder removed) or while focusing invalid field */
+        input:invalid:not(:placeholder-shown) + .error,
+        input:focus:invalid + .error {
+            display:block;
+        }
+
+        input:invalid { box-shadow: 0 0 0 3px rgba(255,0,0,0.03) inset; }
+
+        button{padding:10px 16px;background:var(--accent);border:none;color:#fff;border-radius:4px;cursor:pointer}
+
+        /* Result panel shown when fragment #result is targeted */
+        #result{display:none;margin-top:20px;padding:12px;border:1px solid #ddd;border-radius:6px;background:#f9f9f9}
+        #result:target{display:block}
+
+        /* Small responsive tweak */
+        @media (max-width:420px){main{margin:20px 10px}}
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Add New Student</h1>
+        <form id="studentForm" action="#result" method="get">
+            <div class="field">
+                <label for="studentId">Student ID</label><br>
+                <input id="studentId" name="studentId" type="text" placeholder=" " required>
+                <div class="error">Please enter a student ID.</div>
+            </div>
+
+            <div class="field">
+                <label for="lastName">Last Name</label><br>
+                <input id="lastName" name="lastName" type="text" placeholder=" " required>
+                <div class="error">Please enter a last name.</div>
+            </div>
+
+            <div class="field">
+                <label for="firstName">First Name</label><br>
+                <input id="firstName" name="firstName" type="text" placeholder=" " required>
+                <div class="error">Please enter a first name.</div>
+            </div>
+
+            <div class="field">
+                <label for="email">Email</label><br>
+                <input id="email" name="email" type="email" placeholder=" " required>
+                <div class="error">Please enter a valid email.</div>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="result">
+            <strong>Student added</strong>
+            <p>Your submission was received. In a real system this would be sent to the server for processing.</p>
+            <p><a href="">Add another student</a></p>
+        </div>
+    </main>
+    </body>
+</html>
